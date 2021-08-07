@@ -1,0 +1,861 @@
+<html>
+<head>
+    <title>mind map</title>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>[
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <script src="/assets/js/leader-line.min.js"></script>
+    <script src="https://kit.fontawesome.com/d261793c62.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <style>
+        header{
+            top:0;
+            height:7%;
+            max-height:55px;
+            width:100%;
+            color:#000;
+             /* 
+            display:flex;
+            */
+            position: fixed;
+            justify-content: space-between;
+            -webkit-backdrop-filter: blur(50px);
+            backdrop-filter: blur(50px);
+            z-index:100;
+            border-bottom:0.25px solid #d6d6d6;
+        }
+        footer{
+            height:30%;
+            background-color:#262626;
+            color:#fff;
+            z-index:50;
+        }
+        body{
+            color:#fff;
+            text-align: center;
+            font-size:1rem;
+            width:100%;
+            height:100%;
+            z-index:10;
+            background-color: #fff;
+            background-size: 20px 20px;
+            background-image:radial-gradient(#888 10%, transparent 10%);
+        }
+        body .content{
+            margin:0;
+            padding-top:4%;
+        }
+        input{
+            margin-top:30px;
+        }
+        h3{
+            padding-top:4%;
+        }
+        i{
+            padding-right:5px;
+        }
+        .card{
+            cursor:move;
+        }
+        .savearea{
+            right:10px;
+            width:8%;
+            height:4%;
+        }
+        .save{
+            width:100%;
+            height:100%;
+            display: block;
+            color: #fff;
+            border:none;
+            border-radius:3px;
+            background-color: #2d5dcc;
+        }
+        .menu{
+            padding-top:1%;
+            text-align:right;
+        }
+        .menu p{
+            margin-right:2%;
+            display: inline-block;
+        }
+        .title{
+            margin-left:3%;
+            float:left;
+            text-align:left;
+        }
+        .title h4{
+            margin-top:10%;
+        }
+        .abc{
+            height:5%;
+            text-align: center;
+            margin-bottom:30px;
+        }
+        .generated{
+            border:0;
+            height:5%;
+            background: linear-gradient(135deg, #69ff7f, #17bf41);
+        }
+        .edit{
+            left:10%;
+            top:10%;
+        }
+        .side-bar{
+            overflow:scroll;
+            margin-top:20px;
+            margin-left:1%;
+            margin-right:1%;
+            margin-bottom:1%;
+            width:20%;
+            max-width:870px;
+            height:85%;
+            border:none;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #000b42, #47003f);
+            opacity:80%;
+        }
+    
+        .side-bar .related{
+            border:0px;
+            position: relative;
+            text-align: center;
+            display: block;
+            margin:10px auto 0 auto;
+            /* 幅の指定 */
+            width: 80%;
+            max-width: 200px;
+            box-sizing: border-box;
+            padding: 10px;
+            /* 色の指定 */
+            background: linear-gradient(135deg, #69ff7f, #17bf41);
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .side-bar .related:hover{
+            background: repeating-linear-gradient(135deg, rgba(255,255,255, 0.3), rgba(255,255,255, 0.3) 2px, transparent 2px, transparent 4px), linear-gradient(135deg, #69ff7f, #17bf41);
+        }
+        .side-bar .related:active, .side-bar .related:focus{
+            top: 2px;
+        }
+        .hoge input{
+            border:2px solid #00eb46;
+            position: relative;
+            text-align: center;
+            /* 中央揃え */
+            display: block;
+            margin:10px auto 0 auto;
+            /* 幅の指定 */
+            width: 80%;
+            max-width: 200px;
+            box-sizing: border-box;
+            padding: 10px;
+            /* 色の指定 */
+            background:none;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .hoge input:hover{
+            background: #00570c;
+        }
+        .hoge .def{
+            border:2px solid #eb9100;
+            width:30%;
+        }
+        .hoge .def:hover{
+            background:#613a00;
+        }
+        .hoge .edi{
+            border:2px solid #006eff;
+            width:30%;
+        }
+        .hoge .edi:hover{
+            background:#001957;
+        }
+        .hoge .del{
+            border:2px solid #ff0051;
+            width:30%;
+        }
+        .hoge .del:hover{
+            background:#570023;
+        }
+        .cle{
+            color:#fff;
+            border:2px solid #fff;
+            border-radius: 10px;
+            background:none;
+        }
+
+        .workArea{
+            width:100%;
+            height:100%;
+            overflow:scroll;
+            padding-top:30px;
+        }
+        .side-top{
+            width:100%;
+            height:4rem;
+            text-align:center;
+            padding-right:20px;
+            margin-bottom:10px;
+        }
+        .side-top {
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            background: rgba(255,255,255,.1);
+        }
+        .bg-unkw{
+            background:gray;
+        }
+        @supports not (backdrop-filter: blur(30px)) {
+            .side-top {
+                background: rgba(255,255,255,.8);
+            }
+        }
+        @media all and (-ms-high-contrast: none) {
+            .side-top {
+                background: rgba(255,255,255,.8);
+            }
+        }
+        .side-top h3{
+            display:inline-block;
+            font-size:1.3rem;
+            color:#fff;
+        }
+        .req{
+            padding-top:3%;
+        }
+        article{
+            width:100%;
+            height:100%;
+            display:flex;
+        }
+        dt:after{
+            color:#fff;
+            position:absolute;
+            left:17%;
+            content:"＋";
+        }
+        dt {
+            text-align:left;
+            margin-right:10%;
+            margin-left:10%;
+            padding-top:15%;
+            padding-bottom:10px;
+            border-bottom:1.5px solid #fff;
+            cursor:pointer;
+        }
+        dd {
+            display: none;
+            margin: 10px;
+        }
+        .cards input{
+            margin-top:0px;
+            border:none;
+            background:none;
+        }
+        .mspan{
+        color:#2ba3ff;
+    }
+    .side-title:after{
+        
+    }
+
+@media screen and (max-width: 1024px) {
+    html {
+        font-size: 90.0%;
+    }
+    .abc{
+            height:4%;
+            text-align: center;
+        }
+    .menu{
+            padding-top:2%;
+        }
+    .side-bar{
+        height:50%;
+    }
+    .side-top{
+            width:100%;
+            height:10%;
+            background-color:#6c2eab;
+            text-align:center;
+    }
+     .side-top {
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            background: rgba(255,255,255,.1);
+        }
+        @supports not (backdrop-filter: blur(30px)) {
+            .side-top {
+                background: rgba(255,255,255,.8);
+            }
+        }
+        @media all and (-ms-high-contrast: none) {
+            .side-top {
+                background: rgba(255,255,255,.8);
+            }
+        }
+}
+@media screen and (max-width: 720px) {
+    html {
+        font-size: 75.0%;
+    }
+    .menu{
+            padding-top:3%;
+        }
+    .side-top{
+            width:100%;
+            height:5%;
+            background-color:#6c2eab;
+            text-align:center;
+    }
+     .side-top {
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            background: rgba(255,255,255,.1);
+        }
+        @supports not (backdrop-filter: blur(30px)) {
+            .side-top {
+                background: rgba(255,255,255,.8);
+            }
+        }
+        @media all and (-ms-high-contrast: none) {
+            .side-top {
+                background: rgba(255,255,255,.8);
+            }
+        }
+}
+    </style>
+     <script>
+     $(document).ready(function () {
+         //ここに線でつなぐやつをかく
+         $(function(){
+                 
+             $('.card').each(function() {
+                 var tag = $(this).data('tag')
+                 var id = $(this).attr('id')
+                 $('.card').each(function() {
+                     var tag2 = $(this).data('tag')
+                     var id2 = $(this).attr('id')
+                     var dif = tag - tag2
+                     if( dif == 1 ){
+                         new LeaderLine(
+                         document.getElementById( id2 ),
+                         document.getElementById( id ),
+                         {startPlugColor: '#3221c4', endPlugColor: '#c42193', gradient: true},
+                         {startPlug: 'disc', endPlug: 'arrow3'}
+                         );
+                     }
+                 });
+             });
+         });
+                     
+         $(".card").bind("mouseup", function () {
+         var id = $(this).attr('id')
+         var x = $(this).css('left')
+         var y = $(this).css('top')
+         console.log(id);
+         console.log(x);
+         console.log(y);
+         $.ajax ({
+             url: '/position/' + id,
+             type: 'POST',
+             dataType: "json",
+             data: {
+                 id: id,
+                 x: x,
+                 y: y
+             }
+         });
+          new LeaderLine(
+              document.getElementById( id2 ),
+              document.getElementById( id ),
+              {startPlugColor: '#3221c4', endPlugColor: '#c42193', gradient: true},
+              {startPlug: 'disc', endPlug: 'arrow3'}
+              );
+     })
+         $(".card").draggable();
+     })
+     
+     
+
+
+$(function(){
+        $("div"). keydown(function(e) {
+            if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+    });
+    
+    
+    $(function(){
+  $('dt').click(function(){
+    $(this).siblings('dd').slideToggle();
+    $('dt').not($(this)).siblings('dd').slideUp();
+  });
+});
+
+
+window.onload = function(){
+            $('#inputs').hide();
+            $('#inputs2').hide();
+            $('#inputs3').hide();
+            $('#please').show();
+            $('#please2').show();
+            $('#please3').show();
+            $('#not').hide();    
+            $('#not2').hide();    
+            $('#not3').hide();   
+            $('#not4').hide();
+            }
+
+$(function(){
+    var title = $(".title")
+    var bool = title.attr("id")
+    console.log(bool)
+    if (bool == "true"){
+            console.log("trueって言ったろ")
+            $('.first2').show();
+            $('.first').hide();
+            $('#please4').hide();
+        }else{
+            console.log("falseって言ったろ")
+            $('#inputs4').hide();
+            $('#please4').show();
+        }
+    })
+
+
+
+
+$(function(){
+  $('.hoge').submit(function(e) {
+    var title = $(".title")
+    var bool = title.attr("id")
+    e.preventDefault();
+    $("#hoge").validate({
+      rules: {
+        'content': {
+          required: true
+        }
+      }
+    });
+    if (!$("#hoge").valid()) {
+      return false;
+    }
+    if (bool == "true"){
+         var thema = $("#content").val();
+         var form = $('.hoge')
+         $.ajax ({
+      url: '/save2',
+      type: 'POST',
+      dataType: "json",
+      data: {
+          thema: thema
+      },
+      timeout: 60000,  
+      beforeSend: function (xhr, settings) {
+        $('.submit-add').attr('disabled', true);
+      },
+      success: function(res) {
+        $('#work').append('<form class="cards" action="/card/' + res.id + '" method="post"><div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-unkw" id="' + res.id + '"><input class="session text-white" type="submit" value=" ' + res.content + ' "></div></form> ');
+        $(".card").draggable();
+        $('.submit-add').attr('disabled', false);
+        form[0].reset();
+      },
+        error: function() {
+        $('#work').append('error');
+      }
+    })
+         
+         
+     }else{
+     var thema = $("#content").val();
+     var form = $('.hoge')
+     var base = form.find('.target')
+     var id = base.attr('id')
+    $.ajax ({
+      url: '/save3',
+      type: 'POST',
+      dataType: "json",
+      data: {
+          thema: thema,
+          id: id
+      },
+      timeout: 60000,  
+      beforeSend: function (xhr, settings) {
+        $('.submit-add').attr('disabled', true);
+      },
+      success: function(res) {
+        $('#work').append('<form class="cards" action="/card/' + res.id + '" method="post"><div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-unkw" id="' + res.id + '"><input class="session text-white" type="submit" value=" ' + res.content + ' "></div></form> ');
+        $(".card").draggable();
+        $('.submit-add').attr('disabled', false);
+        form[0].reset();
+      },
+        error: function() {
+        $('#work').append('error');
+      }
+    })
+     }
+  });
+});
+
+
+
+$(function(){
+  $('#hoge2').submit(function(e) {
+    e.preventDefault();
+    $("#hoge2").validate({
+      rules: {
+        'thema': {
+          required: true
+        }
+      }
+    });
+    if (!$("#hoge2").valid()) {
+      return false;
+    }
+     var thema = $("#thema").val();
+     var form = $('#hoge2')
+     var id = form.attr('class').slice(1);
+     $("#hoge2").removeClass()
+    $.ajax ({
+      url: '/edit2/' + id,
+      type: 'POST',
+      dataType: "json",
+      data: {
+          id: id,
+          thema: thema
+      },
+      timeout: 60000,  
+      beforeSend: function (xhr, settings) {
+        $('.submit-edit').attr('disabled', true);
+      },
+      success: function(res) {
+        $("input[name=" + id + "]").val(res.content);
+        console.log(res.content)
+        $("input[name=" + id + "]").parent().parent().removeClass("generated");
+        $("input[name=" + id + "]").parent().parent().addClass("bg-danger");
+        //あとでちゃんとtagのmodのやつでif文を書く!!!今はとりあえずbg-danger
+        $('.submit-edit').attr('disabled', false);
+        $(".card").draggable();
+        form[0].reset();
+      },
+        error: function() {
+        $('#work').append('error');
+      }
+    })
+  });
+});
+
+
+$(function(){
+  $('#hoge3').submit(function(e) {
+    e.preventDefault()
+     var form = $('#hoge3')
+     var id = form.attr('class').slice(1);
+     $("#hoge3").removeClass()
+     console.log(id)
+    $.ajax ({
+      url: '/delete2/' + id,
+      type: 'POST',
+      dataType: "json",
+      data: {
+          id: id
+      },
+      timeout: 60000,  
+      beforeSend: function (xhr, settings) {
+        $('.submit-delete').attr('disabled', true);
+      },
+      success: function(res) {
+        $('.submit-delete').attr('disabled', false);
+        form[0].reset();
+        $(".card").draggable();
+      },
+        error: function() {
+        $('#work').append('error');
+      }
+    })
+    $("input[name=" + id + "]").parent().parent().remove();
+  });
+});
+
+
+
+
+$(function(){
+  $('.session').click(function() {
+     var id = $(this).data('id');
+     $("#hoge2").removeClass()
+     $("#hoge3").removeClass()
+     $(".target").removeAttr('id')
+     console.log(id)
+    $.ajax ({
+      url: '/card2/' + id,
+      type: 'POST',
+      dataType: "json",
+      data: {
+          id: id
+      },
+      timeout: 60000,  
+      beforeSend: function (xhr, settings) {
+        $('.session').attr('disabled', true);
+      },
+      success: function(res) {
+        if (res.base == false) {
+            $('#inputs').show();
+            $('#inputs2').show();
+            $('#inputs3').show();
+            $('#inputs4').show();
+            $('.target').val(res.content);
+            $('.target').attr("id", res.id);
+            $('#please').hide();
+            $('#please2').hide();
+            $('#please3').hide();
+            $('#please4').hide();
+            $('#not').hide();
+            $('#not2').hide();
+            $('#not3').hide();
+            $('#not4').hide();
+            $('#hoge2').addClass("a" + res.id);
+            $('#hoge3').addClass("a" + res.id);
+            $('#related').addClass("a" + res.id);
+            var form = $("#related")
+            var id = form.attr("class").slice(1);
+            $('#related').attr('action', '/related_word/' + id);
+ 
+        } else {
+            $('#inputs').hide();
+            $('#inputs2').hide();
+            $('#inputs3').hide();
+            $('#inputs4').show();
+            $('.add').val(res.content);
+            $('.add').attr("id", res.id);
+            $('#please').hide();
+            $('#please2').hide();
+            $('#please3').hide();
+            $('#please4').hide();
+            $('#not').show();
+            $('#not2').show();
+            $('#not3').show();
+        }
+        
+        $('.session').attr('disabled', false);
+      },
+        error: function() {
+        $('#work').append('error');
+      }
+    })
+  });
+});
+
+
+$(function(){
+  $('.clear').click(function() {
+      $('#inputs').hide();
+      $('#inputs2').hide();
+      $('#inputs3').hide();
+      $('#inputs4').hide();
+      $('#please').show();
+      $('#please2').show();
+      $('#please3').show();
+      $('#please4').show();
+      $('#not').hide();
+      $('#not2').hide();
+      $('#not3').hide();
+      $('#not4').hide();
+});
+});
+
+
+    </script>
+</head>
+<header>
+    <div class="title" id="<%= @empty %>">
+    <h4><span class="mspan">m</span>ind-map</h4>
+    </div>
+    <div class="menu">
+    <i class="fas fa-sign-in-alt"></i><p>ログイン</p>
+    <i class="fas fa-tachometer-alt"></i><p>ダッシュボード</p>
+    <i class="fas fa-user-cog"></i><p>設定</p>
+    </div>
+</header>
+<body>
+<div class="content">
+<article>
+<div class="col-4 side-bar">
+<div class="side-top">
+    <i class="fas fa-tools"></i><h3  class="side-title">EDITING</h3>
+</div>
+<!--<input type="button" value="フォーム追加" onclick="addForm()"><br>
+        <div id="input">
+            
+        </div> -->
+<dl>
+<dt>
+追加
+</dt>
+<dd>
+    
+<div id="please4">
+<p class="req">繋ぎ元を選択してください</p>
+</div>
+
+<div id="inputs4">
+<form class="hoge" id="hoge">　
+<div id="first">
+　　　　<h6 class="base" style=" margin:0; padding:0">繋ぎ元:</h6><input class="target add" type="text" name="base" readonly>
+</div>
+<div id="first2">
+        <h6 style=" margin:0; padding:0">追加:</h6><input maxlength="10"  type="text" id="content" name="content" placeholder="ここに入力" required>
+        <input class="def" type="submit" id="submit-add" value="決定">
+</form>
+</div>
+</div>
+<div id="not4">
+    <p>自動生成元のカードです</p>
+</div>
+</dd>
+</dl>
+<dl>
+<dt>
+編集
+</dt>
+<dd>
+<div id="please2">
+<p class="req">選択してください</p>
+</div>
+
+<div id="inputs2">
+<form method="post" id="hoge2">
+    <input class="target" maxlength="10" type="text" name="thema" id="thema">
+    <div class="hoge">
+    <input class="edi" id="submit-edit" type="submit" value="保存">
+    </div>
+</form>
+</div>
+
+<div id="not2">
+    <p>自動生成元のカードです</p>
+</div>
+
+</dd>
+</dl>
+<dl>
+<dt>
+削除
+</dt>
+<dd>
+
+<div id="please">
+<p class="req">選択してください</p>
+</div>
+
+<div id="inputs">
+<form  method="post" id="hoge3">
+    <input class="target" type="text" name="thema" readonly>
+    <div class="hoge">
+        <input class="del" type="submit" value="削除" >
+    </div>
+</form>
+</div>
+
+<div id="not">
+    <p>自動生成元のカードです</p>
+</div>
+
+</dd>
+</dl>
+<dl>
+<dt>
+自動生成
+</dt>
+<dd>
+    
+<div id="please3">
+<p class="req">選択してください</p>
+</div>
+
+<div id="inputs3">
+<form method="post" id="related">
+    <input class="target" type="text" name="thema" readonly>
+        <input class="related" type="submit" value="自動生成">
+</form>
+</div>
+
+<div id="not3">
+<p>同じカードから複数回自動生成はできません</p>
+</div>
+
+</dd>
+</dl>
+<form id="clear" method="get">
+    <input class="cle" id="submit-cle" type="submit" value="選択をクリア">
+</form>
+</div>
+<div>
+</div>
+<div class="workArea" id="work">
+    <div class="savearea">
+    <a href="/" class="save">保存</a>
+    </div>
+    <% @card.each do |y| %>
+     <% if y.generated == false %>
+     <% if y.tag%5 == 1 %>
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-danger" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>"> 
+     <form class="cards" method="post">
+     <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
+     </form>
+     </div>
+     <% elsif y.tag%5 == 2 %>
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-warning" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>">
+     <form class="cards" method="post">
+     <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
+     </form>
+     </div>
+     <% elsif y.tag%5 == 3 %>
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-success" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>"> 
+     <form class="cards" method="post">
+     <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
+     </form>
+     </div>
+     <% elsif y.tag%5 == 4 %>
+     <div  class="card col-lg-2 col-md-3 col-sm-3  col-xs-3 d-block mx-auto abc bg-primary" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>"> 
+     <form class="cards" method="post">
+     <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
+     </form>
+     </div>
+     <% elsif y.tag%5 == 0 %>
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-info" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>"> 
+     <form class="cards" method="post">
+     <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
+     </form>
+     </div>
+     <% end %>
+     <% else %>
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc generated" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>">
+     <form class="cards" method="post">
+     <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
+     </form>
+     </div>
+     <% end %>
+     <% end %>
+</div>
+</article>
+</div>
+</body>
+<footer>
+    フッターです
+</footer>
+</html>
