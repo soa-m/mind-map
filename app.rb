@@ -9,10 +9,12 @@ enable :sessions
 
 get '/' do
     @card = Card.all.order("created_at desc")
+    @newest = Card.all.size
+    puts @newest
     if @card.empty?
-        @empty = true
+        @empty = "true"
     else
-        @empty = false
+        @empty = "false"
     end
     erb :index
 end
@@ -42,6 +44,7 @@ post '/related_word/:id' do
     Card.create(
         content: content,
         tag: tag,
+        parent: id,
         generated: true
     )
     end
@@ -87,6 +90,7 @@ post '/save3' do
     Card.create(
         content: thema,
         tag: tag,
+        parent: id,
         generated: false
     )
     card = Card.last
@@ -106,9 +110,10 @@ post '/position/:id' do
 end
 
 post '/edit2/:id' do
-    session.clear
     id = params[:id]
     thema = params[:thema]
+    puts(thema)
+    puts(id)
     str = Card.find(id)
     str.content = thema
     str.generated = false
@@ -124,4 +129,26 @@ post '/delete2/:id' do
     str = Card.find(id)
     str.destroy
     session.clear
+end
+
+get '/signin' do
+    erb :sign_in
+end
+
+get '/signup' do
+    @user = User.create{
+        mail:params[:mail],
+        password:params[:password]
+        passwprd_confirmation:params[:passwprd_confirmation]
+    }
+    if @user.persisted?
+        session[:user] = @user.id
+    end
+    redirect '/'
+    erb :sign_up
+end
+
+get '/signout' do
+    session[:user] = nil
+    redirect '/'
 end
