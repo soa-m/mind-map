@@ -4,7 +4,7 @@
     <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>[
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
     <script src="/assets/js/leader-line.min.js"></script>
     <script src="https://kit.fontawesome.com/d261793c62.js" crossorigin="anonymous"></script>
@@ -338,24 +338,26 @@
      $(document).ready(function () {
          //ここに線でつなぐやつをかく
          $(function(){
-                 
              $('.card').each(function() {
-                 var tag = $(this).data('tag')
-                 var id = $(this).attr('id')
-                 $('.card').each(function() {
-                     var tag2 = $(this).data('tag')
-                     var id2 = $(this).attr('id')
-                     var dif = tag - tag2
-                     if( dif == 1 ){
-                         new LeaderLine(
+                 var data = $(this).data('parent')
+                 var sample = (String(data)).split(' ');
+                 var id = $(this).attr("id")
+                 var size = $(".menu").data("size")
+                 console.log("sizeは" + size)
+                 for(var i=0; i<=size; i++) {
+                     var id2 = sample[i]
+                     console.log( "id2は" + id2 )
+                     console.log("iは" + i)
+                     if ( id2 ){
+                     new LeaderLine(
                          document.getElementById( id2 ),
                          document.getElementById( id ),
                          {startPlugColor: '#3221c4', endPlugColor: '#c42193', gradient: true},
                          {startPlug: 'disc', endPlug: 'arrow3'}
-                         );
-                     }
-                 });
-             });
+                         ); 
+                     };
+                 }
+         });
          });
                      
          $(".card").bind("mouseup", function () {
@@ -375,12 +377,6 @@
                  y: y
              }
          });
-          new LeaderLine(
-              document.getElementById( id2 ),
-              document.getElementById( id ),
-              {startPlugColor: '#3221c4', endPlugColor: '#c42193', gradient: true},
-              {startPlug: 'disc', endPlug: 'arrow3'}
-              );
      })
          $(".card").draggable();
      })
@@ -526,7 +522,7 @@ $(function(){
     if (!$("#hoge2").valid()) {
       return false;
     }
-     var thema = $("#thema").val();
+     var thema = $("input[name='thema']").val()
      var form = $('#hoge2')
      var id = form.attr('class').slice(1);
      $("#hoge2").removeClass()
@@ -685,7 +681,7 @@ $(function(){
     <div class="title" id="<%= @empty %>">
     <h4><span class="mspan">m</span>ind-map</h4>
     </div>
-    <div class="menu">
+    <div class="menu" data-size="<%= @newest %>">
     <i class="fas fa-sign-in-alt"></i><p>ログイン</p>
     <i class="fas fa-tachometer-alt"></i><p>ダッシュボード</p>
     <i class="fas fa-user-cog"></i><p>設定</p>
@@ -813,38 +809,38 @@ $(function(){
     <% @card.each do |y| %>
      <% if y.generated == false %>
      <% if y.tag%5 == 1 %>
-     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-danger" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>"> 
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-danger" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-parent="<%= y.parent %>"> 
      <form class="cards" method="post">
      <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
      </form>
      </div>
      <% elsif y.tag%5 == 2 %>
-     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-warning" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>">
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-warning" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-parent="<%= y.parent %>">
      <form class="cards" method="post">
      <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
      </form>
      </div>
      <% elsif y.tag%5 == 3 %>
-     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-success" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>"> 
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-success" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-parent="<%= y.parent %>"> 
      <form class="cards" method="post">
      <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
      </form>
      </div>
      <% elsif y.tag%5 == 4 %>
-     <div  class="card col-lg-2 col-md-3 col-sm-3  col-xs-3 d-block mx-auto abc bg-primary" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>"> 
+     <div  class="card col-lg-2 col-md-3 col-sm-3  col-xs-3 d-block mx-auto abc bg-primary" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-parent="<%= y.parent %>"> 
      <form class="cards" method="post">
      <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
      </form>
      </div>
      <% elsif y.tag%5 == 0 %>
-     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-info" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>"> 
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc bg-info" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-parent="<%= y.parent %>"> 
      <form class="cards" method="post">
      <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
      </form>
      </div>
      <% end %>
      <% else %>
-     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc generated" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-tag="<%= y.tag %>">
+     <div  class="card col-lg-2 col-md-3 col-sm-3 col-xs-3 d-block mx-auto abc generated" id="<%= y.id %>" style=" left:<%= y.x %>px; top:<%= y.y %>px; " data-parent="<%= y.parent %>">
      <form class="cards" method="post">
      <input class="session text-white" type="button" name="<%= y.id %>" data-id="<%= y.id %>" value="<%= y.content %>">
      </form>
