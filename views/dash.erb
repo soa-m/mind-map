@@ -1,0 +1,221 @@
+<html>
+<head>
+    <title>mind map</title>
+    <script src="https://kit.fontawesome.com/d261793c62.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <style>
+         header{
+            top:0;
+            height:7%;
+            max-height:55px;
+            width:100%;
+            color:#000;
+             /* 
+            display:flex;
+            */
+            position: fixed;
+            justify-content: space-between;
+            -webkit-backdrop-filter: blur(50px);
+            backdrop-filter: blur(50px);
+            border-bottom:0.25px solid #d6d6d6;
+        }
+        footer{
+            height:30%;
+            background-color:#262626;
+            color:#fff;
+        }
+        body{
+            padding-top:7%;
+            color:#000;
+            background-color:#fff;
+            text-align: center;
+            font-size:1rem;
+            font-family: "Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;
+            width:100%;
+            height:100%;
+        }
+        a{
+            text-decoration: none;
+            color:#000;
+        }
+        i{
+            padding-right:5px;
+        }
+        .menu{
+            padding-top:1%;
+            text-align:right;
+        }
+        .menu p{
+            margin-right:2%;
+            display: inline-block;
+        }
+        .titleArea h1{
+            font-size:2rem;
+            font-weight:500;
+            display: inline-block;
+        }
+        .titleArea i{
+            font-size:2rem;
+        }
+        .title{
+            margin-left:3%;
+            float:left;
+            text-align:left;
+        }
+        .title h4{
+            margin-top:10%;
+        }
+        .mspan{
+        color:#2ba3ff;
+        }
+        .titleArea{
+            text-align:left;
+            margin-left:5%;
+            margin-bottom:5%;
+        }
+        .table{
+            margin:2% auto 15% auto;
+            width:60%;
+        }
+        .buttons{
+            margin-left:75%;
+        }
+        .modalArea {
+  display: none;
+  position: fixed;
+  z-index: 10; /*サイトによってここの数値は調整 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modalBg {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30,30,30,0.9);
+}
+
+.modalWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform:translate(-50%,-50%);
+  width: 70%;
+  max-width: 500px;
+  padding: 10px 30px;
+  background-color: #fff;
+}
+
+.closeModal {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  cursor: pointer;
+}
+
+    </style>
+    <script>
+$(function () {
+  $('#openModal').click(function(){
+      $('#modalArea').fadeIn();
+  });
+  $('#closeModal , #modalBg').click(function(){
+    $('#modalArea').fadeOut();
+  });
+});
+
+$(function () {
+  $('#openModal2').click(function(){
+      $('#modalArea2').fadeIn();
+  });
+  $('#closeModal2 , #modalBg2').click(function(){
+    $('#modalArea2').fadeOut();
+  });
+});
+    </script>
+</head>
+<header>
+    <div class="title" id="<%= @empty %>">
+    <a href="/"><h4><span class="mspan">m</span>ind-map</h4></a>
+    </div>
+    <div class="menu" data-size="<%= @newest %>">
+    <% if @current == 0 %>
+    <a href="/signout"><i class="fas fa-sign-out-alt"></i><p><%= @name %>からログアウト</p></a>
+    <% else %>
+    <a href="/signin"><i class="fas fa-sign-in-alt"></i><p>ログイン</p></a>
+    <% end %>
+    <a href="/dash"><i class="fas fa-tachometer-alt"></i><p>ダッシュボード</p></a>
+    <a id="openModal2"><i class="fas fa-user-cog"></i><p>設定</p></a>
+    </div>
+</header>
+<body>
+    <section id="modalArea2" class="modalArea">
+  <div id="modalBg2" class="modalBg"></div>
+  <div class="modalWrapper">
+    <div class="modalContents">
+        <p>すみません、ここはまだ実装してません。</p>
+    </div>
+    <div id="closeModal2" class="closeModal">
+      ×
+    </div>
+  </div>
+</section>
+    <div class="titleArea">
+        <i class="fas fa-tachometer-alt"></i><h1>ダッシュボード</h1>
+    </div>
+    <div class="buttons">
+        <a class="btn btn-primary" id="openModal"><i class="fas fa-folder-plus"></i>新規作成</a>
+    </div>
+    <section id="modalArea" class="modalArea">
+  <div id="modalBg" class="modalBg"></div>
+  <div class="modalWrapper">
+    <div class="modalContents">
+        <h4>新規作成</h4>
+        <form action="/list" method="post">
+        <p>mind-mapの名前</p>
+        <input type="text" name="name" placeholder="10文字以内" maxlength="10" required>
+        <p>説明</p>
+        <input type="text" name="detail" placeholder="(任意)">
+        <input type="submit" value="作成">
+        </form>
+    </div>
+    <div id="closeModal" class="closeModal">
+      ×
+    </div>
+  </div>
+</section>
+        <table class="table">
+        
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">name</th>
+      <th scope="col">detail</th>
+      <th scope="col">edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @list.present? %>
+    <% @list.each do |list| %>
+    <tr>
+      <th scope="row"><%= list.id %></th>
+      <td><%= list.name %></td>
+      <td><%= list.detail %></td>
+      <form action="/check/<%= list.id %>" method="get">
+      <td><input type="submit" value="編集"></td>
+      </form>
+    </tr>
+    <% end %>
+    <% end %>
+    
+  </tbody>
+
+</table>
+</body>
+<footer>
+    フッターです
+</footer>
+</html>

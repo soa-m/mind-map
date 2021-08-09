@@ -1,0 +1,214 @@
+<html>
+<head>
+    <title>mind map</title>
+    <script src="https://kit.fontawesome.com/d261793c62.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <style>
+        header{
+            top:0;
+            height:7%;
+            max-height:55px;
+            width:100%;
+            color:#000;
+             /* 
+            display:flex;
+            */
+            position: fixed;
+            justify-content: space-between;
+            -webkit-backdrop-filter: blur(50px);
+            backdrop-filter: blur(50px);
+            border-bottom:0.25px solid #d6d6d6;
+        }
+        footer{
+            height:30%;
+            background-color:#262626;
+            color:#fff;
+        }
+        body{
+            padding-top:7%;
+            color:#000;
+            background-color:#fff;
+            text-align: center;
+            font-size:1rem;
+            font-family: "Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;
+            width:100%;
+            height:100%;
+        }
+        input{
+            margin-top:30px;
+        }
+        h1{
+            font-weight:bold;
+            margin-bottom:2%
+        }
+        h3{
+            padding-top:4%;
+        }
+        i{
+            padding-right:5px;
+        }
+        a{
+            text-decoration: none;
+            color:#000;
+        }
+        .mspan{
+        color:#2ba3ff;
+    }
+        .idea{
+            width:50%;
+/*            padding-left:50%;*/
+            float:right;
+        }
+        .titleArea{
+            height:100%;
+            display: block;
+        }
+        .menu{
+            padding-top:1%;
+            text-align:right;
+        }
+        .menu p{
+            margin-right:2%;
+            display: inline-block;
+        }
+        .title{
+            margin-left:3%;
+            float:left;
+            text-align:left;
+        }
+        .title h4{
+            margin-top:10%;
+        }
+        .heading{
+            padding-top:15%;
+        }
+        a{
+            color:#000;
+        }
+        a.start {
+            font-weight:bold;
+            padding:1% 2% 1% 2%;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            text-align: center;
+            vertical-align: middle;
+            text-decoration: none;
+            letter-spacing: 0.1rem;
+            color: #212529;
+            border-radius: 0.5rem;
+        }
+        .white{
+            color:#fff;
+        }
+        a.start {
+            font-size:1rem;
+            width:12%;
+            color: #000;
+            background-color: #417abf;
+            border-bottom: 5px solid #234269;
+        }
+        
+        a.start:active {
+            margin-top:3px;
+            color: #000;
+            background: # fff20a;
+            border-bottom: 2px solid #234269;
+        }
+        .modalArea {
+  display: none;
+  position: fixed;
+  z-index: 10; /*サイトによってここの数値は調整 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modalBg {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30,30,30,0.9);
+}
+
+.modalWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform:translate(-50%,-50%);
+  width: 70%;
+  max-width: 500px;
+  padding: 10px 30px;
+  background-color: #fff;
+}
+
+.closeModal {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  cursor: pointer;
+}
+        @media screen and (max-width: 1024px) {
+            html {
+                font-size: 90.0%;
+            }
+        }
+        @media screen and (max-width: 720px) {
+            html {
+                font-size: 75.0%;
+            }
+        
+    </style>
+    <script>
+$(function () {
+  $('#openModal').click(function(){
+      $('#modalArea').fadeIn();
+  });
+  $('#closeModal , #modalBg').click(function(){
+    $('#modalArea').fadeOut();
+  });
+});
+    </script>
+</head>
+<header>
+    <div class="title" id="<%= @empty %>">
+    <a href="/"><h4><span class="mspan">m</span>ind-map</h4></a>
+    </div>
+    <div class="menu" data-size="<%= @newest %>">
+    <% if @current == 0 %>
+    <a href="/signout"><i class="fas fa-sign-out-alt"></i><p><%= @name %>からログアウト</p></a>
+    <% else %>
+    <a href="/signin"><i class="fas fa-sign-in-alt"></i><p>ログイン</p></a>
+    <% end %>
+    <a href="/dash"><i class="fas fa-tachometer-alt"></i><p>ダッシュボード</p></a>
+    <a id="openModal"><i class="fas fa-user-cog"></i><p>設定</p></a>
+    </div>
+</header>
+<body>
+    <section id="modalArea" class="modalArea">
+  <div id="modalBg" class="modalBg"></div>
+  <div class="modalWrapper">
+    <div class="modalContents">
+        <p>すみません、ここはまだ実装してません。</p>
+    </div>
+    <div id="closeModal" class="closeModal">
+      ×
+    </div>
+  </div>
+</section>
+    <div class="titleArea">
+        <img class="idea" src="/assets/image/idea.png">
+        <div class="heading">
+        <h1>アイデアを、思いのままに</h1>
+        <a href="/signup" class="start"><span class="white">新規登録</span></a>
+        </div>
+    </div>
+</body>
+<footer>
+    フッターです
+</footer>
+</html>

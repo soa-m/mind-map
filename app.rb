@@ -7,10 +7,57 @@ require 'active_support/all'
 require 'json'
 enable :sessions
 
+helpers do
+    def current_user
+        User.find_by(id: session[:user])
+    end
+    def current_list
+        List.find_by(id: session[:list])
+    end
+end
+
 get '/' do
-    @card = Card.all.order("created_at desc")
+    if session[:user].nil?
+        @current = 1
+    else
+        @current = 0
+        @name = session[:name]
+    end
+    erb :home
+end
+
+get '/dash' do
+    if session[:user].nil?
+        @current = 1
+    else
+        @current = 0
+        @name = session[:name]
+        @list = current_user.lists
+    end
+
+    erb :dash
+end
+
+get '/check/:id' do
+    id = params[:id]
+    session[:list] = id
+    
+    puts "idは" + id
+    redirect '/app'
+end
+
+get '/app' do
+    if session[:user].nil?
+        @current = 1
+    else
+        @current = 0
+        @name = session[:name]
+    end
+    
+    if session[:list].present?
+    @card = current_list.cards.order("created_at desc")
+    end
     @newest = Card.all.size
-    puts @newest
     if @card.empty?
         @empty = "true"
     else
@@ -41,7 +88,7 @@ post '/related_word/:id' do
     @new=@new.shuffle
     @new=@new.first(5)
     @new.each do |content|
-    Card.create(
+    current_list.cards.create(
         content: content,
         tag: tag,
         parent: id,
@@ -52,7 +99,7 @@ post '/related_word/:id' do
     base.base = true
     base.save
     session.clear
-    redirect '/'
+    redirect '/app'
 end
 
 get '/clear' do
@@ -70,12 +117,12 @@ end
 
 post '/save2' do
     thema = params[:thema]
-    Card.create(
+    current_list.cards.create(
         content: thema,
         tag: 1,
         generated: false
     )
-    card = Card.last
+    card = current_list.cards.last
     data = {content: card.content, id: card.id, tag: card.tag}
     content_type :json
     data.to_json
@@ -87,13 +134,13 @@ post '/save3' do
     base=Card.find(id)
     base_tag = base.tag.to_i
     tag = base_tag + 1
-    Card.create(
+    current_list.cards.create(
         content: thema,
         tag: tag,
         parent: id,
         generated: false
     )
-    card = Card.last
+    card = current_list.cards.last
     data = {content: card.content, id: card.id, tag: card.tag}
     content_type :json
     data.to_json
@@ -131,21 +178,43 @@ post '/delete2/:id' do
     session.clear
 end
 
+post '/list' do
+    current_user.lists.create(
+        name: params[:name],
+        detail: params[:detail]
+        )
+    redirect '/dash'
+end
+
 get '/signin' do
     erb :sign_in
 end
 
 get '/signup' do
-    @user = User.create{
-        mail:params[:mail],
-        password:params[:password]
-        passwprd_confirmation:params[:passwprd_confirmation]
-    }
-    if @user.persisted?
-        session[:user] = @user.id
-    end
-    redirect '/'
     erb :sign_up
+end
+
+post '/signin' do
+    user = User.find_by(mail: params[:name])
+    if user && user.authenticate(params[:password])
+        session[:user] = user.id
+        session[:name] = user.mail
+    end
+    redirect '/dash'
+end
+
+post '/signup' do
+    user = User.create(
+        mail: params[:name], 
+        password: params[:password], 
+        password_confirmation: params[:password_confirmation]
+    )
+    if user.persisted?
+        session[:user] = user.id
+        session[:name] = user.mail
+    end
+    erb :sign_up
+    redirect '/dash'
 end
 
 get '/signout' do

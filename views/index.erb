@@ -57,6 +57,10 @@
         i{
             padding-right:5px;
         }
+        a{
+            text-decoration: none;
+            color:#000;
+        }
         .card{
             cursor:move;
         }
@@ -267,7 +271,39 @@
     .side-title:after{
         
     }
+    .modalArea {
+  display: none;
+  position: fixed;
+  z-index: 10; /*サイトによってここの数値は調整 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 
+.modalBg {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30,30,30,0.9);
+}
+
+.modalWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform:translate(-50%,-50%);
+  width: 70%;
+  max-width: 500px;
+  padding: 10px 30px;
+  background-color: #fff;
+}
+
+.closeModal {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  cursor: pointer;
+}
 @media screen and (max-width: 1024px) {
     html {
         font-size: 90.0%;
@@ -335,6 +371,14 @@
 }
     </style>
      <script>
+     $(function () {
+  $('#openModal').click(function(){
+      $('#modalArea').fadeIn();
+  });
+  $('#closeModal , #modalBg').click(function(){
+    $('#modalArea').fadeOut();
+  });
+});
      $(document).ready(function () {
          //ここに線でつなぐやつをかく
          $(function(){
@@ -679,14 +723,29 @@ $(function(){
 </head>
 <header>
     <div class="title" id="<%= @empty %>">
-    <h4><span class="mspan">m</span>ind-map</h4>
+    <a href="/"><h4><span class="mspan">m</span>ind-map</h4></a>
     </div>
     <div class="menu" data-size="<%= @newest %>">
-    <i class="fas fa-sign-in-alt"></i><p>ログイン</p>
-    <i class="fas fa-tachometer-alt"></i><p>ダッシュボード</p>
-    <i class="fas fa-user-cog"></i><p>設定</p>
+    <% if @current == 0 %>
+    <a href="/signout"><i class="fas fa-sign-out-alt"></i><p><%= @name %>からログアウト</p></a>
+    <% else %>
+    <a href="/signin"><i class="fas fa-sign-in-alt"></i><p>ログイン</p></a>
+    <% end %>
+    <a href="/dash"><i class="fas fa-tachometer-alt"></i><p>ダッシュボード</p></a>
+    <a id="openModal"><i class="fas fa-user-cog"></i><p>設定</p></a>
     </div>
 </header>
+<section id="modalArea" class="modalArea">
+  <div id="modalBg" class="modalBg"></div>
+  <div class="modalWrapper">
+    <div class="modalContents">
+        <p class="text-dark">すみません、ここはまだ実装してません。</p>
+    </div>
+    <div id="closeModal" class="closeModal text-dark">
+      ×
+    </div>
+  </div>
+</section>
 <body>
 <div class="content">
 <article>
@@ -804,7 +863,7 @@ $(function(){
 </div>
 <div class="workArea" id="work">
     <div class="savearea">
-    <a href="/" class="save">保存</a>
+    <a href="/app" class="save">保存</a>
     </div>
     <% @card.each do |y| %>
      <% if y.generated == false %>
