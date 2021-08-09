@@ -1,4 +1,4 @@
--# Mind-map
+# Mind-map
 web上でmind-mapを描けるツールです。
  
 # DEMO
