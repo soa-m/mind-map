@@ -13,11 +13,18 @@ https://salty-headland-11345.herokuapp.com/
  
 実行方法
 ```bash
+cd /file_path
+```
+```bash
 bundle install
-
+```
+```bash
 rake db:create
-
+```
+```bash
 rake db:migrate
-
+```
+```bash
 ruby app.rb
+
 ```
