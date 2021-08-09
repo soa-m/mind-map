@@ -13,5 +13,6 @@ https://salty-headland-11345.herokuapp.com/
  
 実行方法
 ```bash
+rake db:migrate
 ruby app.rb
 ```
