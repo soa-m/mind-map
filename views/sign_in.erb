@@ -1,5 +1,34 @@
-<form action="/signin" method="post">
-    <input type="text" name="name" placeholder="名前">
-    <input type="password" name="password" placeholder="パスワード">
-    <input type="submit" value="ログイン">
+<style>
+    .form{
+        text-align:center;
+        margin:5% auto auto auto;
+        padding-top:30px;
+        width:20%;
+        height:50%;
+        box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
+        border-radius:30px;
+    }
+    input{
+        width:80%;
+        height:10%;
+        border-radius:15px;
+        border:none;
+        box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
+        margin-bottom:20px;
+    }
+    .submit{
+        color:#fff;
+        border:none;
+        box-shadow:none;
+        background-color:#22bd4e;
+        cursor:hand;
+    }
+    
+</style>
+<div class="form input-group">
+<form action="/signin" class="form-control" method="post">
+    <input type="text" class="form-control" name="name" placeholder="名前">
+    <input type="password" class="form-control" name="password" placeholder="パスワード">
+    <input type="submit" class="submit" value="ログイン">
 </form>
+</div>

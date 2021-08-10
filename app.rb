@@ -53,12 +53,14 @@ get '/app' do
         @current = 0
         @name = session[:name]
     end
-    
     if session[:list].present?
     @card = current_list.cards.order("created_at desc")
+    @newest = current_list.cards.all.size
+    else
+    @newest = 0
     end
-    @newest = Card.all.size
-    if @card.empty?
+    puts @card
+    if @card.nil?
         @empty = "true"
     else
         @empty = "false"
@@ -67,8 +69,10 @@ get '/app' do
 end
 
 post '/related_word/:id' do
+    list = session[:list]
+    puts "listは" + list
     id = params[:id]
-    aaa = Card.find(id).tag
+    aaa = current_list.cards.find(id).tag
     tag = aaa.to_i
     tag = tag + 1
     thema=params[:thema]
@@ -98,7 +102,6 @@ post '/related_word/:id' do
     base = Card.find(id)
     base.base = true
     base.save
-    session.clear
     redirect '/app'
 end
 
@@ -175,7 +178,6 @@ post '/delete2/:id' do
     id = params[:id]
     str = Card.find(id)
     str.destroy
-    session.clear
 end
 
 post '/list' do
@@ -204,6 +206,9 @@ post '/signin' do
 end
 
 post '/signup' do
+    name = params[:name]
+    check = User.where( mail: name)
+    if check.empty?
     user = User.create(
         mail: params[:name], 
         password: params[:password], 
@@ -213,11 +218,41 @@ post '/signup' do
         session[:user] = user.id
         session[:name] = user.mail
     end
-    erb :sign_up
     redirect '/dash'
+    else
+    return "そのユーザーネームはすでに使われています。ページを戻してから他のネームでお試しください。"
+    end
+    erb :sign_up
 end
 
 get '/signout' do
     session[:user] = nil
     redirect '/'
+end
+
+get '/destroy' do
+    if session[:user].present?
+    id = session[:user]
+    user = User.find(id)
+    user.destroy
+    session[:user] = nil
+    end
+    redirect '/'
+end
+
+get '/dash/destroy/:id' do
+    id = params[:id]
+    list = current_user.lists.find(id)
+    list.destroy
+    session[:list] = nil
+    redirect '/dash'
+end
+
+post '/dash/edit/:id' do
+    id = params[:id]
+    list = current_user.lists.find(id)
+    list.name = params[:name]
+    list.detail = params[:detail]
+    list.save
+    redirect '/dash'
 end

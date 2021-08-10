@@ -82,7 +82,7 @@
         .buttons{
             margin-left:75%;
         }
-        .modalArea {
+        section {
   display: none;
   position: fixed;
   z-index: 10; /*サイトによってここの数値は調整 */
@@ -135,6 +135,27 @@ $(function () {
     $('#modalArea2').fadeOut();
   });
 });
+
+$(function () {
+  $('button').click(function(){
+      var id = $(this).data("id")
+      console.log(id)
+      var modal = $("section").filter(
+            function(){
+                return($(this).data('id') === id);
+            })
+      modal.fadeIn();
+  });
+  $('#closeModal3 , #modalBg3').click(function(){
+    var id = $(this).data("id")
+      console.log(id)
+      var modal = $("section").filter(
+            function(){
+                return($(this).data('id') === id);
+            })
+    modal.fadeOut();
+  });
+});
     </script>
 </head>
 <header>
@@ -156,7 +177,8 @@ $(function () {
   <div id="modalBg2" class="modalBg"></div>
   <div class="modalWrapper">
     <div class="modalContents">
-        <p>すみません、ここはまだ実装してません。</p>
+        <p class="text-darkr">アカウントを削除する</p>
+        <button class="btn btn-danger" onclick="location.href='/destroy'">削除</button>
     </div>
     <div id="closeModal2" class="closeModal">
       ×
@@ -191,25 +213,51 @@ $(function () {
         
   <thead>
     <tr>
-      <th scope="col">#</th>
       <th scope="col">name</th>
       <th scope="col">detail</th>
       <th scope="col">edit</th>
+       <th scope="col">destroy</th>
+      <th scope="col">mind-map</th>
     </tr>
   </thead>
   <tbody>
     <% if @list.present? %>
     <% @list.each do |list| %>
     <tr>
-      <th scope="row"><%= list.id %></th>
       <td><%= list.name %></td>
       <td><%= list.detail %></td>
+      <td>
+          <button id="openModals" data-id="<%= list.id %>" class="btn bg-success text-white">edit</button>
+      </td>
+      <td>
+          <form action="/dash/destroy/<%= list.id %>" method="get">
+          <input class="btn bg-danger text-white" type="submit" value="destroy">
+          </form>
+      </td>
       <form action="/check/<%= list.id %>" method="get">
-      <td><input type="submit" value="編集"></td>
+      <td><input class="btn bg-info text-white" type="submit" value="mind-map"></td>
       </form>
+      <section id="editModal" data-id="<%= list.id %>" class="modalArea">
+  <div id="modalBg3" data-id="<%= list.id %>" class="modalBg"></div>
+  <div class="modalWrapper">
+    <div class="modalContents">
+        <h4>編集</h4>
+        <form action="/dash/edit/<%= list.id %>" method="post">
+        <p>mind-mapの名前</p>
+        <input value="<%= list.name %>" type="text" name="name" maxlength="10" required>
+        <p>説明</p>
+        <input value="<%= list.detail %>" type="text" name="detail">
+        <input type="submit" value="決定">
+        </form>
+    </div>
+    <div id="closeModal3" data-id="<%= list.id %>" class="closeModal">
+      ×
+    </div>
+  </div>
+</section>
+<% end %>
+<% end %>
     </tr>
-    <% end %>
-    <% end %>
     
   </tbody>
 
